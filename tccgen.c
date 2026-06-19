@@ -7511,7 +7511,7 @@ again:
                     gexpr();
                     vpop();
                 }
-                skip(';');
+                if (tok == ';') skip(';');
             }
         }
     }
