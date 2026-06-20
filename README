@@ -1,3 +1,23 @@
+Semicolonless C Compiler
+------------------------
+
+This is a fork of Tiny C Compiler that does not need semicolons as line
+terminators. It still ignores newlines and passess the full test suite (except
+of course the "errors and warnings" test, which has been disabled).
+
+You can use this just like any other C compiler.
+    slcc file.c -o output
+
+You can also do:
+    slcc --run file.c
+or add the following shebang to your file:
+    #!/usr/local/bin/slcc --run
+
+The README of the original TCC has been included below.
+
+
+
+
 Tiny C Compiler - C Scripting Everywhere - The Smallest ANSI C compiler
 -----------------------------------------------------------------------
 
