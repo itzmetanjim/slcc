@@ -29,15 +29,19 @@
 #include "tcctools.c"
 
 static const char help[] =
-    "Tiny C Compiler "TCC_VERSION" - Copyright (C) 2001-2006 Fabrice Bellard\n"
-    "Usage: tcc [options...] [-o outfile] [-c] infile(s)...\n"
-    "       tcc [options...] -run infile (or --) [arguments...]\n"
+    "Semicolonless C Compiler "TCC_VERSION" - Copyright (C) 2026 Tanjim Kamal\n"
+    "Fork of TCC that does not require semicolons as line terminators.\n"
+    "The compiler will automatically detect when a line ends, for example:\n"
+    "    int a, b scanf(\"%d %d\",&a,&b) printf(\"%d\",a+b) \n"
+    "can be written in a single line with no semicolons.\n"
+    "Usage: slcc [options...] [-o outfile] [-c] infile(s)...\n"
+    "       slcc [options...] -run infile (or --) [arguments...]\n"
     "General options:\n"
     "  -c           compile only - generate an object file\n"
     "  -o outfile   set output filename\n"
     "  -run         run compiled source\n"
-    "  -fflag       set or reset (with 'no-' prefix) 'flag' (see tcc -hh)\n"
-    "  -Wwarning    set or reset (with 'no-' prefix) 'warning' (see tcc -hh)\n"
+    "  -fflag       set or reset (with 'no-' prefix) 'flag' (see slcc -hh)\n"
+    "  -Wwarning    set or reset (with 'no-' prefix) 'warning' (see slcc -hh)\n"
     "  -w           disable all warnings\n"
     "  -v --version show version\n"
     "  -vv          show search paths or loaded files\n"
@@ -59,7 +63,7 @@ static const char help[] =
     "  -rdynamic    export all global symbols to dynamic linker\n"
     "  -shared      generate a shared library/dll\n"
     "  -soname      set name for shared library to be used at runtime\n"
-    "  -Wl,-opt[=val]  set linker option (see tcc -hh)\n"
+    "  -Wl,-opt[=val]  set linker option (see slcc -hh)\n"
     "Debugger options:\n"
     "  -g           generate stab runtime debug info\n"
     "  -gdwarf[-x]  generate dwarf runtime debug info\n"
@@ -92,7 +96,7 @@ static const char help[] =
     ;
 
 static const char help2[] =
-    "Tiny C Compiler "TCC_VERSION" - More Options\n"
+    "Semicolonless C Compiler "TCC_VERSION" - More Options\n"
     "Special options:\n"
     "  -P -P1                        with -E: no/alternative #line output\n"
     "  -dD -dM                       with -E: output #define directives\n"
@@ -169,7 +173,7 @@ static const char help2[] =
     ;
 
 static const char version[] =
-    "tcc version "TCC_VERSION
+    "slcc version "TCC_VERSION
 #ifdef TCC_GITHASH
     " "TCC_GITHASH
 #endif

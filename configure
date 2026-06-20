@@ -436,7 +436,7 @@ if test "$mingw32" = "no"; then
   default execprefix   "${prefix}"
   default libdir       "${execprefix}/lib"
   default bindir       "${execprefix}/bin"
-  default tccdir       "${libdir}/tcc"
+  default tccdir       "${libdir}/slcc"
   default includedir   "${prefix}/include"
   default sharedir     "${prefix}/share"
   default docdir       "${sharedir}/doc"
