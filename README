@@ -5,6 +5,10 @@ This is a fork of Tiny C Compiler that does not need semicolons as line
 terminators. It still ignores newlines and passess the full test suite (except
 of course the "errors and warnings" test, which has been disabled).
 
+To install,
+    ./configure
+    sudo make install
+
 You can use this just like any other C compiler.
     slcc file.c -o output
 
