@@ -813,7 +813,7 @@ static int tcc_compile(TCCState *s1, int filetype, const char *str, int fd)
 
     if (setjmp(s1->error_jmp_buf) == 0) {
 
-        {
+        if (!(filetype & (AFF_TYPE_ASM | AFF_TYPE_ASMPP))) {
             const char *src;
             char *buf = NULL;
             char *itrd;
@@ -835,6 +835,13 @@ static int tcc_compile(TCCState *s1, int filetype, const char *str, int fd)
             tcc_open_bf(s1,fd==-1?"<string>":str,tlen);
             memcpy(file->buffer,itrd,tlen);
             tcc_free(itrd);
+        } else if (fd == -1) {
+            int len = strlen(str);
+            tcc_open_bf(s1, "<string>", len);
+            memcpy(file->buffer, str, len);
+        } else {
+            tcc_open_bf(s1, str, 0);
+            file->fd = fd;
         }
 
         preprocess_start(s1, filetype);
