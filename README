@@ -2,20 +2,49 @@ Semicolonless C Compiler
 ------------------------
 
 This is a fork of Tiny C Compiler that does not need semicolons as line
-terminators. It still ignores newlines and passess the full test suite (except
-of course the "errors and warnings" test, which has been disabled).
+terminators and allows usinf Python-style indnetation instead of braces.
 
-To install,
+To install (Linux and macOS):
     ./configure
+    sudo make
     sudo make install
 
 You can use this just like any other C compiler.
     slcc file.c -o output
 
 You can also do:
-    slcc --run file.c
+    slcc -run file.c
 or add the following shebang to your file:
     #!/usr/local/bin/slcc --run
+
+
+Example code
+------------
+
+To compile this, save this to a file and use slcc to compile it or slcc -run to
+directly run it.
+
+    #include <stdio.h>
+
+    int main():
+        float a,b int c float cache=1
+        printf("Input some numbers: ")
+        if (scanf("%f %f %d",&a,&b,&c)!=3):
+            printf("Invalid input.\n")
+            return 1
+        printf("\n")
+        if(b==0):
+            printf("b is zero\n")
+        else:
+            printf("%f/%f = %f\n",a,b,a/b)
+        if(c>=0):
+            for (int i=0 i>c i++):
+                cache*=a
+            printf("%f^%d = %f\n",a,c,cache)
+        else:
+            printf("c is negative\n")
+        return 0
+
 
 The README of the original TCC has been included below.
 
