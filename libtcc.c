@@ -65,6 +65,7 @@
 #endif /* ONE_SOURCE */
 
 #include "tcc.h"
+#include "slcc.c"
 
 /********************************************************/
 /* global variables */
@@ -812,13 +813,28 @@ static int tcc_compile(TCCState *s1, int filetype, const char *str, int fd)
 
     if (setjmp(s1->error_jmp_buf) == 0) {
 
-        if (fd == -1) {
-            int len = strlen(str);
-            tcc_open_bf(s1, "<string>", len);
-            memcpy(file->buffer, str, len);
-        } else {
-            tcc_open_bf(s1, str, 0);
-            file->fd = fd;
+        {
+            const char *src;
+            char *buf = NULL;
+            char *itrd;
+            int srclen;
+            int tlen;
+            if (fd == -1) {
+                src = str;
+                srclen = strlen(str);
+            } else {
+                srclen = lseek(fd,0,SEEK_END);
+                lseek(fd, 0, SEEK_SET);
+                buf = tcc_malloc(srclen);
+                read(fd,buf,srclen);
+                close(fd);
+                src = buf;
+            }
+            itrd=slcc_indent_transform(src,srclen,&tlen);
+            tcc_free(buf);
+            tcc_open_bf(s1,fd==-1?"<string>":str,tlen);
+            memcpy(file->buffer,itrd,tlen);
+            tcc_free(itrd);
         }
 
         preprocess_start(s1, filetype);
