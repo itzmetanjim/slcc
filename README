@@ -2,7 +2,7 @@ Semicolonless C Compiler
 ------------------------
 
 This is a fork of Tiny C Compiler that does not need semicolons as line
-terminators and allows usinf Python-style indnetation instead of braces.
+terminators and allows using Python-style indentation instead of braces.
 
 To install (Linux and macOS):
     ./configure
