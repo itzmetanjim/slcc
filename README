@@ -45,6 +45,7 @@ directly run it.
             printf("c is negative\n")
         return 0
 
+More examples can be found in the examples/ directory.
 
 The README of the original TCC has been included below.
 
