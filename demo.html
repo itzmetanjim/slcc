@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>slcc "demo"</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:ital,wght@0,200..800;1,200..800&family=Atkinson+Hyperlegible+Next:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="prism.min.css">
+    </head>
+    <body>
+        <main>
+            <div class="allcol">
+                <h1><code>slcc</code> (semicolonless C compiler) demo</h1>
+                <p>this is a C compiler that does not need semicolons and allows Python-style indentation instead of braces.  <a href='https://github.com/itzmetanjim/slcc'>GitHub repo</a></p>
+                <p>click the arrows to switch between the demos: <div id="switcher"> <button id="prev">◀</button> <span id="swspan">loading...</span> <button id="next">▶</button> </div></p>
+            </div>
+            <div class="col1">
+                <h2>example code</h2>
+                <p>to compile, <a href='https://github.com/itzmetanjim/slcc'>install slcc from the repo</a> and save as <code>file.c</code> and run <code>slcc file.c -o output_file</code>.</p>
+                <pre class="language-c" id="code"><code id="icode">"loading..."
+
+
+
+"if it's not loading, you may have JavaScript disabled."
+"JavaScript is required for this page to work."
+                </code></pre>
+            </div>
+            <div class="col2">
+                <h2>output</h2>
+                <p><blue>blue</blue> indicates inputs.</p>
+                <pre class="language-plain" id="output"><code id="ioutput"><blue>$ slcc file.c -o output; ./output</blue>
+Hello, World!</code></pre>
+            </div>
+        </main>
+        <script src="prism.min.js"></script>
+        <script>
+            const prev=document.getElementById("prev")
+            const next=document.getElementById("next")
+            const swspan=document.getElementById("swspan")
+            const icode=document.getElementById("icode")
+            const iout=document.getElementById("ioutput")
+            const names=["hello world","fibonacci", "add two numbers", "fizzbuzz", "reverse a word"]
+            const progs=[
+`#include <tcclib.h>
+
+int main():
+    printf("Hello, World!\\n")
+    return 0`,
+`#include <tcclib.h>
+
+int fib(int n):
+    if (n <= 2):
+        return 1;
+    else:
+        return fib(n-1) + fib(n-2);
+
+int main(int argc, char **argv):
+    int n;
+    if (argc < 2):
+        printf("usage: fib n\\n"
+               "Compute nth Fibonacci number\\n")
+        return 1
+    n = atoi(argv[1])
+    printf("fib(%d) = %d\\n", n, fib(n))
+    return 0
+`,
+`int main():
+    int a, b
+    printf("Enter two numbers: ")
+    if (scanf("%d %d", &a, &b) != 2):
+        printf("That's not two numbers.\\n")
+        return 1
+    printf("%d + %d = %d\\n", a, b, a + b)
+    return 0
+`,
+`#include <stdio.h>
+
+int main():
+    int n
+    printf("Count up to: ")
+    if (scanf("%d", &n) != 1 || n < 1):
+        printf("Please enter a positive number.\\n")
+        return 1
+    for (int i = 1 i <= n i++):
+        if (i % 15 == 0):
+            printf("FizzBuzz\\n")
+        else if (i % 3 == 0):
+            printf("Fizz\\n")
+        else if (i % 5 == 0):
+            printf("Buzz\\n")
+        else:
+            printf("%d\\n", i)
+    return 0
+`,`#include <stdio.h>
+#include <string.h>
+
+void reverse(char *s):
+    char *end = s + strlen(s) - 1
+    char c
+    while (s < end):
+        c = *s
+        ;*s++ = *end //use a semicolon to distinguish from multiplying
+        ;*end-- = c
+
+int main():
+    char word[100]
+    printf("Enter a word: ")
+    if (scanf("%99s", word) != 1):
+        return 1
+    reverse(word)
+    printf("Reversed: %s\n", word)
+    return 0
+
+`]
+            const outs=[
+`<blue>$ slcc file.c -o output; ./output</blue>
+Hello, World!`,
+`<gray># slcc -run runs the file in one command!</gray>
+<blue>$ slcc -run file.c</blue>
+usage: fib n
+Compute nth Fibonacci number
+
+<blue>$ slcc -run file.c 5</blue>
+fib(5) = 5
+
+<blue>$ slcc -run file.c 6</blue>
+fib(6) = 8
+
+<blue>$ slcc -run file.c 7</blue>
+fib(7) = 13
+
+<blue>$ slcc -run file.c 8</blue>
+fib(8) = 21
+`,
+`<blue>$ slcc -run file.c</blue>
+Enter two numbers: <blue>1 2</blue>
+1 + 2 = 3
+<blue>$ slcc -run file.c</blue>
+Enter two numbers: <blue>103 347</blue>
+103 + 347 = 450
+<blue>$ slcc -run file.c</blue>
+Enter two numbers: <blue>garbage data</blue>
+That's not two numbers.
+`,
+`<blue>$ slcc -run file.c</blue>
+Count up to: <blue>15</blue>
+1
+2
+Fizz
+4
+Buzz
+Fizz
+7
+8
+Fizz
+Buzz
+11
+Fizz
+13
+14
+FizzBuzz
+`,
+`<blue>$ slcc -run file.c</blue>
+Enter a word: <blue>hello</blue>
+Reversed: olleh`
+            ]
+            window.currentidx=0
+            window.Prism = window.Prism || {};
+            function updateit(x){
+                window.currentidx=((x%names.length)+names.length)%names.length
+                console.log(x,window.currentidx)
+                swspan.innerText=names[window.currentidx]
+                icode.innerHTML=Prism.highlight(progs[window.currentidx],Prism.languages.c,'c')
+                iout.innerHTML=outs[window.currentidx]
+            }
+            next.addEventListener("click",()=>{updateit(window.currentidx+1)})
+            prev.addEventListener("click",()=>{updateit(window.currentidx - 1)})
+            window.setTimeout(()=>{updateit(0)},100)
+        </script>
+    </body>
+    <style>
+body {
+    font-family: "Atkinson Hyperlegible Next", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+}
+    code, .mono{
+        font-family: "Atkinson Hyperlegible Mono", sans-serif;
+        font-optical-sizing: auto;
+        font-size: 0.85em;
+        font-weight: 400;
+        font-style: normal;
+        color: #1e1e2e;
+        background-color: #ddd;
+        padding: 5px;
+        border-radius: 10px;
+    }
+    pre code{
+        padding:10px;
+    }
+    main {
+        margin: 5%;
+        column-count:2;
+        column-gap:40px;
+    }
+    @media screen and (max-width: 1024px) {
+        main{
+            column-count:1;
+        }
+    }
+    .allcol{
+        column-span: all;
+        margin-bottom: 40px;
+        border-bottom: 1px solid #ddd;
+    }
+    #switcher{
+        font-size:1.5em;
+        padding: 7px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        background-color: #ccc;
+        width: fit-content;
+    }
+    #switcher > button {
+        all: unset;outline: revert;
+        cursor: pointer;
+        margin: -7px;
+        padding: 7px;
+        font-size: 0.8em;
+        color: #333;
+    }
+    #switcher:has(button:hover:nth-child(1)) {
+        background: linear-gradient(to right, #aaa 50%, #ccc 50%)
+    }
+    #switcher:has(button:hover:nth-child(3)) {
+        background: linear-gradient(to left, #aaa 50%, #ccc 50%)
+    }
+
+    #swspan{
+        padding:7px;
+        background-color:#fff;
+        width: 40%;
+        min-width: fit-content;
+    }
+    /*
+    #switcher>*:nth-child(1){
+        border-right: 1px solid #ccc;
+    }
+    #switcher>*:nth-child(3){
+        border-left: 1px solid #ccc;
+    }*/
+
+    .col1, .col2 { break-inside: avoid; }
+    .col2 { break-before: column; }
+    h2 { margin-top: 0; }
+    blue{color: #1990b8 !important;}
+    gray{color: #7D8B99 !important;}
+    </style>
+</html>
