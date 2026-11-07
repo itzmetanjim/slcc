@@ -6,7 +6,7 @@ terminators and allows using Python-style indentation instead of braces.
 
 To install (Linux and macOS):
     ./configure
-    sudo make
+    make
     sudo make install
 
 You can use this just like any other C compiler.
@@ -38,7 +38,7 @@ directly run it.
         else:
             printf("%f/%f = %f\n",a,b,a/b)
         if(c>=0):
-            for (int i=0 i>c i++):
+            for (int i=0 i<c i++):
                 cache*=a
             printf("%f^%d = %f\n",a,c,cache)
         else:
@@ -46,6 +46,39 @@ directly run it.
         return 0
 
 More examples can be found in the examples/ directory.
+
+Semicolons are optional, not banned: normal C with semicolons and braces
+still compiles, and you can mix both styles in the same file.
+
+
+Known cursed behaviour
+----------------------
+
+There are no semicolons to tell slcc where a statement ends, so a
+statement keeps going for as long as the next token could continue the
+expression. This is the same problem as JavaScript's automatic semicolon
+insertion, and it means a line that starts with *, ( or - gets glued
+onto the line before it:
+
+    x = 1
+    *p = 7        // parsed as: x = 1 * p = 7      -> compile error
+
+    b = a
+    (a) = 5       // parsed as: b = a(a) = 5       -> "function pointer expected"
+
+    b = a
+    -1            // parsed as: b = a - 1          -> compiles, b is wrong!
+
+The last one is the worst, because nothing warns you. If a line starts
+with one of these characters, put a semicolon at the end of the line
+before it.
+
+Struct members still need semicolons for now:
+
+    struct point { int x; int y; }    // works
+    struct point { int x int y }      // error: ',' expected
+
+
 
 The README of the original TCC has been included below.
 
