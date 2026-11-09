@@ -122,8 +122,11 @@ for (;;) {
             before--;
         if ((before > 0 && cur[before - 1] == ')') ||
                 (before >= 4 && cur[before-4] == 'e' && cur[before-3] == 'l' &&
-                 cur[before-2] == 's' && cur[before-1] == 'e')) {
-            if (!has_nxt) {
+                 cur[before-2] == 's' && cur[before-1] == 'e' &&
+                 (before == 4 || !((cur[before-5] >= 'a' && cur[before-5] <= 'z') ||
+                                   (cur[before-5] >= 'A' && cur[before-5] <= 'Z') ||
+                                   (cur[before-5] >= '0' && cur[before-5] <= '9') ||
+                                   cur[before-5] == '_')))) {           if (!has_nxt) {
                 OUT_APPEND(cur, cur_len);
                 if (has_nxt) OUT_CHAR('\n');
                 goto nextL;
