@@ -9,6 +9,10 @@ To install (Linux and macOS):
     make
     sudo make install
 
+Compiled binaries for Windows (x86_64), Linux (x86_64 and arm64), and macOS
+(x86_64 and arm64) are available at the following GitHub Release:
+    https://github.com/itzmetanjim/slcc/releases/tag/v0.9.28rc
+
 You can use this just like any other C compiler.
     slcc file.c -o output
 
